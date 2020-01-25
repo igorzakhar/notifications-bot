@@ -1,0 +1,4 @@
+PySocks==1.7.1
+python-dotenv==0.10.3
+python-telegram-bot==12.2.0
+requests==2.22.0
