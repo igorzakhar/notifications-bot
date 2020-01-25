@@ -25,6 +25,9 @@ def run_bot(api_url, api_token, chat_id, bot_token, proxy=None):
     bot = telegram.Bot(token=bot_token, request=reqproxy)
 
     timestamp = ''
+
+    logging.warning('Bot is started.')
+
     while True:
         try:
             notice = receive_notification(api_url, api_token, timestamp)
