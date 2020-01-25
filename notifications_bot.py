@@ -71,9 +71,13 @@ def main():
     api_token = os.getenv('DEVMAN_API_TOKEN')
     telegram_bot_token = os.getenv('TELEGRAM_BOT_TOKEN')
     chat_id = os.getenv('CHAT_ID')
-    proxy = f'socks5://{os.getenv("SOCKS5_PROXY")}'
+    socks5_proxy = os.getenv("SOCKS5_PROXY")
 
-    run_bot(api_url, api_token, chat_id, telegram_bot_token, proxy)
+    proxy_url = ''
+    if socks5_proxy:
+        proxy_url = f'socks5://{socks5_proxy}'
+
+    run_bot(api_url, api_token, chat_id, telegram_bot_token, proxy_url)
 
 
 if __name__ == '__main__':
