@@ -3,7 +3,7 @@ import logging
 import telegram
 
 
-class BotLogsHandler(logging.Handler):
+class TelegramLogsHandler(logging.Handler):
 
     def __init__(self, bot_token, chat_id):
         super().__init__()
@@ -16,14 +16,14 @@ class BotLogsHandler(logging.Handler):
         self.bot.send_message(chat_id=self.chat_id, text=log_entry)
 
 
-def create_logger_bot(logger_name, bot_token=None, chat_id=None):
+def configure_logging(logger_name, bot_token=None, chat_id=None):
+    logging.basicConfig(level=logging.WARNING)
+
     logger = logging.getLogger(logger_name)
     logger.setLevel(logging.INFO)
 
     if bot_token and chat_id:
-        logs_handler = BotLogsHandler(bot_token, chat_id)
+        tg_logs_handler = TelegramLogsHandler(bot_token, chat_id)
         log_format = logging.Formatter('%(message)s')
-        logs_handler.setFormatter(log_format)
-        logger.addHandler(logs_handler)
-
-    return logger
+        tg_logs_handler.setFormatter(log_format)
+        logger.addHandler(tg_logs_handler)

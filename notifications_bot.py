@@ -7,7 +7,10 @@ from dotenv import load_dotenv
 import requests
 import telegram
 
-from log import create_logger_bot
+from log import configure_logging
+
+
+logger = logging.getLogger(__file__)
 
 
 def receive_notification(url, token, timestamp=''):
@@ -29,8 +32,7 @@ def run_bot(api_url, api_token, chat_id, bot_token, proxy, logger=None):
 
     timestamp = ''
 
-    if logger:
-        logger.warning('Бот запущен.')
+    logger.warning('Бот запущен.')
 
     while True:
         try:
@@ -60,17 +62,15 @@ def run_bot(api_url, api_token, chat_id, bot_token, proxy, logger=None):
             timestamp = notice.get('last_attempt_timestamp', '')
 
         except Exception as err:
-            if logger:
-                logger.error('Бот упал с ошибкой.')
-                logger.exception(err, exc_info=True)
+            logger.error('Бот упал с ошибкой.')
+            logger.exception(err, exc_info=True)
+
             time.sleep(60)
             continue
 
 
 def main():
     load_dotenv()
-    logging.getLogger('urllib3').setLevel(logging.WARNING)
-    logging.getLogger('telegram').setLevel(logging.WARNING)
 
     api_url = os.getenv('DEVMAN_API_URL')
     api_token = os.getenv('DEVMAN_API_TOKEN')
@@ -82,11 +82,8 @@ def main():
     if socks5_proxy:
         proxy_url = f'socks5://{socks5_proxy}'
 
-    logger = create_logger_bot(
-        'notifications_bot',
-        bot_token=tg_token,
-        chat_id=chat_id
-    )
+    configure_logging(__file__, bot_token=tg_token, chat_id=chat_id)
+
     run_bot(api_url, api_token, chat_id, tg_token, proxy_url, logger=logger)
 
 
