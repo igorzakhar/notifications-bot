@@ -23,7 +23,7 @@ def receive_notification(url, token, timestamp=''):
     return response.json()
 
 
-def run_bot(api_url, api_token, chat_id, bot_token, proxy, logger=None):
+def run_bot(api_url, api_token, chat_id, bot_token, proxy):
     reqproxy = None
     if proxy:
         reqproxy = telegram.utils.request.Request(proxy_url=proxy)
@@ -32,7 +32,7 @@ def run_bot(api_url, api_token, chat_id, bot_token, proxy, logger=None):
 
     timestamp = ''
 
-    logger.warning('Бот запущен.')
+    logger.info('Бот запущен.')
 
     while True:
         try:
@@ -63,7 +63,7 @@ def run_bot(api_url, api_token, chat_id, bot_token, proxy, logger=None):
 
         except Exception as err:
             logger.error('Бот упал с ошибкой.')
-            logger.exception(err, exc_info=True)
+            logger.exception(err)
 
             time.sleep(60)
             continue
@@ -84,7 +84,7 @@ def main():
 
     configure_logging(__file__, bot_token=tg_token, chat_id=chat_id)
 
-    run_bot(api_url, api_token, chat_id, tg_token, proxy_url, logger=logger)
+    run_bot(api_url, api_token, chat_id, tg_token, proxy_url)
 
 
 if __name__ == '__main__':
